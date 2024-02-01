@@ -39,7 +39,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                GetUrl(it.container.id, href),
+                GetUrl(it.container.canonicalName, href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name}",
                 it.name)
@@ -56,6 +56,6 @@ private fun GetUrl(componentId : String, defaultUrl : String) : String
     }
     else
     {
-        return "../../svg/$componentId.svg";
+        return "https://c4.lebara.com/master/svg/$componentId.svg"
     }
 }    
