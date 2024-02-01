@@ -39,7 +39,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                GetUrl(it.container.canonicalName, href),
+                GetUrl(it.container.name, href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name}",
                 it.name)
