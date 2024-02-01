@@ -56,6 +56,6 @@ private fun GetUrl(componentId : String, defaultUrl : String) : String
     }
     else
     {
-        return "onclick=\"openSvgModal('$componentId-modal', '$componentId-svg')\"";
+        return "../../../svg/$componentId.svg";
     }
 }    
