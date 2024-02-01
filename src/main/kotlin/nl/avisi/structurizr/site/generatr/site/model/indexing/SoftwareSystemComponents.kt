@@ -36,9 +36,10 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
     var documents = emptyList<Document>().toMutableList()
 
     components.forEach {
+        val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
+                .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
-                        .asUrlToDirectory(viewModel.url),
+                GetUrl(it.id, href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name}",
                 it.name)
@@ -46,3 +47,15 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     return documents
 }
+
+private fun GetUrl(componentId : String, defaultUrl : String) : String
+{
+    if (componentId.contains("Component"))
+    {
+        return  defaultUrl;
+    }
+    else
+    {
+        return "onclick=\"openSvgModal('$componentId-modal', '$componentId-svg')\"";
+    }
+}    
