@@ -40,7 +40,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
                 SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                         .asUrlToDirectory(viewModel.url),
                 "Component views",
-                "${softwareSystem.name} | Component views | ${it.container.name}",
+                "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
                 it.name)
     }
 
