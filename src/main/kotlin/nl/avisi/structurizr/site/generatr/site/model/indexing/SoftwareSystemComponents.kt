@@ -27,7 +27,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         )
     }
 
-    fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel) : List<Document> {
+    fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
     var components = softwareSystem.containers
             .sortedBy { it.name }
@@ -35,11 +35,18 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     var documents = emptyList<Document>().toMutableList()
 
+    val diagrams = generatorContext.workspace.views.componentViews
+            .filter { it.softwareSystem == softwareSystem}
+            .sortedBy { it.key }    
+
     components.forEach {
+
+        val key = diagrams.first { v -> v.container.id == it.container.id }.key
+        
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                GetUrl(it.container.name, href),
+                GetUrl(key, href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name}",
                 it.name)
@@ -50,12 +57,5 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
 private fun GetUrl(componentId : String, defaultUrl : String) : String
 {
-    if (componentId.contains("Component"))
-    {
-        return  defaultUrl;
-    }
-    else
-    {
-        return "https://c4.lebara.com/master/svg/$componentId.svg"
-    }
+    return "https://c4.lebara.com/master/svg/$componentId.svg"
 }    
