@@ -1,6 +1,7 @@
 package nl.avisi.structurizr.site.generatr.site.model.indexing
 
 import com.structurizr.model.SoftwareSystem
+import nl.avisi.structurizr.site.generatr.site.GeneratorContext
 import nl.avisi.structurizr.site.generatr.site.asUrlToDirectory
 import nl.avisi.structurizr.site.generatr.site.model.PageViewModel
 import nl.avisi.structurizr.site.generatr.site.model.SoftwareSystemPageViewModel
