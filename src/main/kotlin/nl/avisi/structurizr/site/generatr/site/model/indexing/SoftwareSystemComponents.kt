@@ -42,12 +42,12 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     components.forEach {
 
-        val key = diagrams.first { v -> v.container.id == it.container.id }.key
+        val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
         
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                GetUrl(key, href),
+                GetUrl(dig?.key ?: "NOTFOUND", href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name}",
                 it.name)
