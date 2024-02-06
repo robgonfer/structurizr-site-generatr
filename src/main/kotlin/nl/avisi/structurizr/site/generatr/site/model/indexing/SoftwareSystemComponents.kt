@@ -1,6 +1,7 @@
 package nl.avisi.structurizr.site.generatr.site.model.indexing
 
 import com.structurizr.model.SoftwareSystem
+import nl.avisi.structurizr.site.generatr.site.GeneratorContext
 import nl.avisi.structurizr.site.generatr.site.asUrlToDirectory
 import nl.avisi.structurizr.site.generatr.site.model.PageViewModel
 import nl.avisi.structurizr.site.generatr.site.model.SoftwareSystemPageViewModel
@@ -27,7 +28,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         )
     }
 
-    fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel) : List<Document> {
+    fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
     var components = softwareSystem.containers
             .sortedBy { it.name }
@@ -35,10 +36,18 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     var documents = emptyList<Document>().toMutableList()
 
+    val diagrams = generatorContext.workspace.views.componentViews
+            .filter { it.softwareSystem == softwareSystem}
+            .sortedBy { it.key }    
+
     components.forEach {
+
+        val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
+        
+        val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
+                .asUrlToDirectory(viewModel.url)        
         documents += Document(
-                SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
-                        .asUrlToDirectory(viewModel.url),
+                GetUrl(dig?.key ?: "NOTFOUND", href),
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
                 it.name)
@@ -46,3 +55,8 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     return documents
 }
+
+private fun GetUrl(componentId : String, defaultUrl : String) : String
+{
+    return "https://c4.lebara.com/master/svg/$componentId.svg"
+}    
