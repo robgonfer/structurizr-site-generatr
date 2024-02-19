@@ -71,7 +71,7 @@ private class WriterWithElementLinks(
         writer.writeLine("skinparam svgDimensionStyle false")
         writer.writeLine("skinparam preserveAspectRatio meet")
         writer.writeLine("skinparam pathHoverColor #FF0000")
-        writer.writeLine("skinparam arrowThickness 2")        
+        writer.writeLine("skinparam arrowThickness 4")        
     }
 
     fun writeElement(
