@@ -48,6 +48,7 @@ fun generateDiagramWithElementLinks(
         val stream = ByteArrayOutputStream()
 
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
+        println("Name is " + name +".Definition is " + stream.toString(Charsets.UTF_8))
         stream.toString(Charsets.UTF_8)
     }
 }
