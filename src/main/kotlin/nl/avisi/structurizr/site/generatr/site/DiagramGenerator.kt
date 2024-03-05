@@ -12,6 +12,19 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
+import org.xml.sax.InputSource
+import java.io.File
+import java.io.StringReader
+import java.io.StringWriter
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
 
 fun generateDiagrams(workspace: Workspace, exportDir: File) {
     val pumlDir = pumlDir(exportDir)
