@@ -60,7 +60,7 @@ fun generateDiagramWithElementLinks(
         val stream = ByteArrayOutputStream()
 
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
-        PatchXml(stream.toString(Charsets.UTF_8))
+        AddHighlightToSvg(stream.toString(Charsets.UTF_8))
     }
 }
 
@@ -70,7 +70,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
     return plantUMLExporter.export()
 }
 
- private fun PatchXml(content: String)
+ private fun AddHighlightToSvg(content: String)
             : String {
 
         val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
