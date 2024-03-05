@@ -12,6 +12,18 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.net.URL
 import java.util.concurrent.ConcurrentHashMap
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
+import org.xml.sax.InputSource
+import java.io.StringReader
+import java.io.StringWriter
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathFactory
 
 fun generateDiagrams(workspace: Workspace, exportDir: File) {
     val pumlDir = pumlDir(exportDir)
@@ -48,7 +60,7 @@ fun generateDiagramWithElementLinks(
         val stream = ByteArrayOutputStream()
 
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
-        stream.toString(Charsets.UTF_8)
+        AddHighlightToSvg(stream.toString(Charsets.UTF_8))
     }
 }
 
@@ -57,6 +69,65 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
 
     return plantUMLExporter.export()
 }
+
+ private fun AddHighlightToSvg(content: String)
+            : String {
+
+        val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
+        val xml = InputSource(StringReader(content))
+        val doc = builder.parse(xml)
+        val xPath = XPathFactory.newInstance().newXPath()
+        val gNodes = xPath.compile("//*[local-name()='g' and starts-with(@id, 'elem_')]").evaluate(doc, XPathConstants.NODESET) as NodeList
+
+        val len = gNodes.length - 1
+
+        for (i in 0..len) {
+
+            val node = gNodes.item(i)
+
+            val rect = xPath.compile(".//*[local-name()='rect']").evaluate(node, XPathConstants.NODE) as Node
+            val rectId = node.attributes.getNamedItem("id").nodeValue.replace("elem_", "")  + ".BoxH"
+
+            val attr1 = doc.createAttribute("onmouseover")
+            attr1.value = "addHighlight('${rectId}')";
+
+            val attr2 = doc.createAttribute("onmouseout")
+            attr2.value = "removeHighlight('${rectId}')";
+
+            val attr3 = doc.createAttribute("id");
+            attr3.value = rectId;
+
+            rect.attributes.setNamedItem(attr1)
+            rect.attributes.setNamedItem(attr2)
+            rect.attributes.setNamedItem(attr3)
+        }
+
+        val js =  "<![CDATA[ 	function addHighlight(id) 	{ 		var crmElem = document.getElementById(id); 		crmElem.classList.add(\"boxH\"); 		 		var prefix = id.replace(\".BoxH\",\"\") + \"-to-\"; 		var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]'); 		 		for (i = 0; i < paths.length; ++i) {; 			paths[i].classList.add(\"pathH\") 		} 	} 	 	function removeHighlight(id) 	{ 		var crmElem = document.getElementById(id); 		crmElem.classList.remove(\"boxH\"); 		 		var prefix = id.replace(\".BoxH\",\"\") + \"-to-\"; 		var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]'); 		 		for (i = 0; i < paths.length; ++i) {; 			paths[i].classList.remove(\"pathH\") 		} 		 	} ]]>"
+        val scriptChild = doc.createElement("script")
+        scriptChild.appendChild(doc.createTextNode(js))
+        doc.lastChild.appendChild(scriptChild)
+
+        val styleChild = doc.createElement("style");
+        val attrType = doc.createAttribute("type");
+        attrType.value = "text/css";
+        val css = "<![CDATA[ .boxH { fill: red; } .pathH { stroke: red !important; stroke-width:3.0 !important; } ]]>"
+        styleChild.appendChild(doc.createTextNode(css))
+        doc.lastChild.appendChild((styleChild))
+
+        val tf = TransformerFactory.newInstance()
+        val transformer = tf.newTransformer()
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no")
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        val writer = StringWriter()
+        transformer.transform(DOMSource(doc), StreamResult(writer))
+        val output = writer.buffer.toString()
+                .replace("\n|\r".toRegex(), "")
+                .replace("&lt;", "<")
+                .replace("&gt;", ">")
+
+        return output
+    }
 
 private fun saveAsPUML(diagram: Diagram, plantUMLFile: File) {
     plantUMLFile.writeText(diagram.definition)
