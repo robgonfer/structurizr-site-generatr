@@ -58,7 +58,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         {
             it.relationships.forEach { linkedct ->
 
-                val destination = linkedct.source as? Component
+                val destination = linkedct.destination as? Component
 
                 if (destination != null) {
 
