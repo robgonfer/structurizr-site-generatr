@@ -56,13 +56,17 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         //Add linked components
         if (dig != null)
         {
+            val allDigs = generatorContext.workspace.views.componentViews
+                    .sortedBy { it.key }
+
             it.relationships.forEach { linkedct ->
 
-                val destination = linkedct.destination as? Component
+                //This is actually the destination
+                val source = linkedct.source as? Component
 
-                if (destination != null) {
+                if (source != null) {
 
-                    val relDig = diagrams.firstOrNull { v -> v.container.id == destination.container.id }
+                    val relDig = allDigs.firstOrNull { v -> v.container.id == source.container.id }
 
                     if (relDig?.key?.isNotEmpty() == true)
                     {
@@ -70,7 +74,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
                         documents += Document(
                                 GetUrl(relDig.key, href),
                                 "Component views",
-                                "${softwareSystem.name} | Component views | ${destination.container.name} | ${destination.name} | (INBOUND)",
+                                "${softwareSystem.name} | Component views | ${source.container.name} | ${source.name} | (INBOUND)",
                                 it.name)
                     }
                 }
