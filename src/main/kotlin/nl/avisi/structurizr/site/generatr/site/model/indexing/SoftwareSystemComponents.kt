@@ -56,18 +56,24 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         //Add linked components
         if (dig != null)
         {
-            dig.relationships.forEach { linkedct ->
-                if (linkedct.relationship.destination is Component) {
+            println("Not null dig. Processing " + it.name)
 
-                    val relDig = diagrams.firstOrNull { v -> v.container.id == linkedct.id }
+            it.relationships.forEach { linkedct ->
+
+                val destination = linkedct.destination as? Component
+
+                if (destination != null) {
+
+                    println("Component linked. Processing " + destination.name)
+                    val relDig = diagrams.firstOrNull { v -> v.container.id == destination.container.id }
 
                     if (relDig?.key?.isNotEmpty() == true)
                     {
-                        val cp = linkedct as Component
+
                         documents += Document(
                                 GetUrl(relDig.key, href),
                                 "Component views",
-                                "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
+                                "${softwareSystem.name} | Component views | ${destination.container.name} | ${destination.name} | (INBOUND)",
                                 it.name)
                     }
                 }
