@@ -51,6 +51,27 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
                 it.name)
+
+        //Add linked components
+        if (dig != null)
+        {
+            dig.relationships.forEach { linkedct ->
+                if (linkedct.relationship.destination is Component) {
+
+                    val relDig = diagrams.firstOrNull { v -> v.container.id == linkedct.id }
+
+                    if (relDig?.key?.isNotEmpty() == true)
+                    {
+                        val cp = linkedct as Component
+                        documents += Document(
+                                GetUrl(relDig.key, href),
+                                "Component views",
+                                "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
+                                it.name)
+                    }
+                }
+            };
+        }        
     }
 
     return documents
