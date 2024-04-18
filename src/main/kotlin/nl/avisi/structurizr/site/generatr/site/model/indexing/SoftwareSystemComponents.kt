@@ -1,6 +1,8 @@
 package nl.avisi.structurizr.site.generatr.site.model.indexing
 
+import com.structurizr.model.Component
 import com.structurizr.model.SoftwareSystem
+import nl.avisi.structurizr.site.generatr.includedSoftwareSystems
 import nl.avisi.structurizr.site.generatr.site.GeneratorContext
 import nl.avisi.structurizr.site.generatr.site.asUrlToDirectory
 import nl.avisi.structurizr.site.generatr.site.model.PageViewModel
@@ -30,6 +32,16 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
+    val allSoftwareSystems = generatorContext.workspace.includedSoftwareSystems
+    val allComponents = mutableListOf<Component>()
+    allSoftwareSystems.forEach {ss ->
+
+        allComponents.addAll(ss.containers
+                .flatMap { container -> container.components }
+                .toList())
+
+    }
+        
     var components = softwareSystem.containers
             .sortedBy { it.name }
             .flatMap { container -> container.components }
@@ -38,7 +50,11 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     val diagrams = generatorContext.workspace.views.componentViews
             .filter { it.softwareSystem == softwareSystem}
-            .sortedBy { it.key }    
+            .sortedBy { it.key }
+
+    val allDigs = generatorContext.workspace.views.componentViews
+            .sortedBy { it.key }
+            
 
     components.forEach {
 
@@ -51,6 +67,37 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
                 "Component views",
                 "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
                 it.name)
+
+        //Add linked components
+        if (dig != null)
+        {
+            //Need to find all components with a relationship with IT as destination
+            val componentsWithRel = mutableListOf<Component>()
+
+            allComponents.forEach { c ->
+                c.relationships
+                        .filter { r -> r.destination.id.equals(it.id) }
+                        .forEach {rl ->
+                                componentsWithRel.add(c)
+                        }
+            }
+
+            componentsWithRel.forEach { linkedct ->
+
+                    val relDig = allDigs.firstOrNull { v -> v.container.id == linkedct.container.id }
+
+                    if (relDig?.key?.isNotEmpty() == true)
+                    {
+
+                        documents += Document(
+                                GetUrl(relDig.key, href),
+                                "Component views",
+                                "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
+                                it.name)
+                    }
+
+            };
+        }        
     }
 
     return documents
