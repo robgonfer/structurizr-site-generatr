@@ -31,6 +31,16 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
+    val allSoftwareSystems = generatorContext.workspace.includedSoftwareSystems
+    val allComponents = mutableListOf<Component>()
+    allSoftwareSystems.forEach {ss ->
+
+        allComponents.addAll(ss.containers
+                .flatMap { container -> container.components }
+                .toList())
+
+    }
+        
     var components = softwareSystem.containers
             .sortedBy { it.name }
             .flatMap { container -> container.components }
@@ -39,7 +49,11 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
     val diagrams = generatorContext.workspace.views.componentViews
             .filter { it.softwareSystem == softwareSystem}
-            .sortedBy { it.key }    
+            .sortedBy { it.key }
+
+    val allDigs = generatorContext.workspace.views.componentViews
+            .sortedBy { it.key }
+            
 
     components.forEach {
 
@@ -56,17 +70,20 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
         //Add linked components
         if (dig != null)
         {
-            val allDigs = generatorContext.workspace.views.componentViews
-                    .sortedBy { it.key }
+            //Need to find all components with a relationship with IT as destination
+            val componentsWithRel = mutableListOf<Component>()
 
-            it.relationships.forEach { linkedct ->
+            allComponents.forEach { c ->
+                c.relationships
+                        .filter { r -> r.destination.id.equals(it.id) }
+                        .forEach {rl ->
+                                componentsWithRel.add(c)
+                        }
+            }
 
-                //This is actually the destination
-                val source = linkedct.destination as? Component
+            componentsWithRel.forEach { linkedct ->
 
-                if (source != null) {
-
-                    val relDig = allDigs.firstOrNull { v -> v.container.id == source.container.id }
+                    val relDig = allDigs.firstOrNull { v -> v.container.id == linkedct.container.id }
 
                     if (relDig?.key?.isNotEmpty() == true)
                     {
@@ -74,10 +91,10 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
                         documents += Document(
                                 GetUrl(relDig.key, href),
                                 "Component views",
-                                "${softwareSystem.name} | Component views | ${source.container.name} | ${source.name} | (INBOUND)",
+                                "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
                                 it.name)
                     }
-                }
+
             };
         }        
     }
