@@ -62,7 +62,7 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
             it.relationships.forEach { linkedct ->
 
                 //This is actually the destination
-                val source = linkedct.source as? Component
+                val source = linkedct.destination as? Component
 
                 if (source != null) {
 
