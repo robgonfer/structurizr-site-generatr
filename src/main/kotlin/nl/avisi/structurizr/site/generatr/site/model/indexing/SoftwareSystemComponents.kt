@@ -32,13 +32,13 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
-    val allSoftwareSystems = generatorContext.workspace.includedSoftwareSystems
+    val allSoftwareSystems = softwareSystem.model.softwareSystems
     allSoftwareSystems.forEach {
         println("External SS ${it.name}. ${it.tags}")
     }        
     val allExternalSoftwareSystems = allSoftwareSystems.filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
     allExternalSoftwareSystems.forEach{
-        //println("External SS ${it.name}")
+        println("External SS with tag ${it.name}")
     }    
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
