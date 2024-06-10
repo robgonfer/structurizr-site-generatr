@@ -126,7 +126,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                     documents += Document(
                             GetUrl(relDig.key, href),
                             "Component views",
-                            "${softwareSystem.name} | Component views | ${linkedExternalSS.name} | (INBOUND)",
+                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
                             it.name)
                 }
 
@@ -153,7 +153,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                     documents += Document(
                             GetUrl(relDig.key, href),
                             "Component views",
-                            "${softwareSystem.name} | Component views | ${linkedExternalSS.name} | (OUTBOUND)",
+                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} |  ${linkedExternalSS.name} | (OUTBOUND)",
                             linkedExternalSS.name)
                 }
 
