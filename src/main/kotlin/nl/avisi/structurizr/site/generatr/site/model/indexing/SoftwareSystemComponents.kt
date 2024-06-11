@@ -32,14 +32,9 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
-    val allSoftwareSystems = softwareSystem.model.softwareSystems
-    allSoftwareSystems.forEach {
-        println("External SS ${it.name}. ${it.tags}")
-    }        
+    val allSoftwareSystems = softwareSystem.model.softwareSystems        
     val allExternalSoftwareSystems = allSoftwareSystems.filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
-    allExternalSoftwareSystems.forEach{
-        println("External SS with tag ${it.name}")
-    }    
+    
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
 
@@ -128,6 +123,12 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                             "Component views",
                             "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
                             linkedExternalSS.name)
+
+                    documents += Document(
+                            GetUrl(relDig.key, href),
+                            "Component views",
+                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
+                            it.name)                    
                 }
 
             };
