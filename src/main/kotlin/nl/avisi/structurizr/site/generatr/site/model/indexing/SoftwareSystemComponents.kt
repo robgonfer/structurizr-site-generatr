@@ -127,7 +127,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                             GetUrl(relDig.key, href),
                             "Component views",
                             "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-                            it.name)
+                            linkedExternalSS.name)
                 }
 
             };
