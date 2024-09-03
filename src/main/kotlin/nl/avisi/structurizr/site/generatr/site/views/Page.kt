@@ -21,7 +21,8 @@ private fun HTML.headFragment(viewModel: PageViewModel) {
         link(rel = "stylesheet", href = "../" + "/style.css".asUrlToFile(viewModel.url))
         link(rel = "stylesheet", href = "./" + "/style-branding.css".asUrlToFile(viewModel.url))
         script(type = ScriptType.textJavaScript, src = "../" + "/modal.js".asUrlToFile(viewModel.url)) { }
-        script(type = ScriptType.textJavaScript, src = "../" + "/ai.js".asUrlToFile(viewModel.url)) { }                
+        script(type = ScriptType.textJavaScript, src = "../" + "/ai.js".asUrlToFile(viewModel.url)) { }
+        script(type = ScriptType.textJavaScript, src = "../" + "/site-helper.js".asUrlToFile(viewModel.url)) { }        
         script(type = ScriptType.textJavaScript, src = "../" + "/svg-modal.js".asUrlToFile(viewModel.url)) { }
         script(type = ScriptType.textJavaScript, src = CDN.svgpanzoomJs()) { }
 
