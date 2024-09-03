@@ -104,6 +104,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
 
         val tooltipChild = doc.createElement("g");
         tooltipChild.setAttribute("id", "tooltip")
+        tooltipChild.setAttribute("visibility", "hidden")        
         tooltipChild.nodeValue = "<rect x=\"2\" y=\"2\" width=\"80\" height=\"24\" fill=\"black\" opacity=\"0.4\" rx=\"2\" ry=\"2\"/>\t\t<rect width=\"80\" height=\"240\" fill=\"#009cdc\" rx=\"2\" ry=\"2\"/>\t\t<text x=\"4\" y=\"6\" style=\"font:arial;fill='red';stroke='#0000FF'\">Tooltip</text>"
         doc.lastChild.appendChild((tooltipChild))
 
