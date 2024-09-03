@@ -105,7 +105,34 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         val tooltipChild = doc.createElement("g");
         tooltipChild.setAttribute("id", "tooltip")
         tooltipChild.setAttribute("visibility", "hidden")        
-        tooltipChild.nodeValue = "<rect x=\"2\" y=\"2\" width=\"80\" height=\"24\" fill=\"black\" opacity=\"0.4\" rx=\"2\" ry=\"2\"/>\t\t<rect width=\"80\" height=\"240\" fill=\"#009cdc\" rx=\"2\" ry=\"2\"/>\t\t<text x=\"4\" y=\"6\" style=\"font:arial;fill='red';stroke='#0000FF'\">Tooltip</text>"
+        
+        val firstRectNode = doc.createElement("rect");
+        firstRectNode.setAttribute("x","2");
+        firstRectNode.setAttribute("y","2");
+        firstRectNode.setAttribute("width","80");
+        firstRectNode.setAttribute("height","24");
+        firstRectNode.setAttribute("fill","black");
+        firstRectNode.setAttribute("opacity","0.4");
+        firstRectNode.setAttribute("rx","2");
+        firstRectNode.setAttribute("ry","2");
+        tooltipChild.appendChild(firstRecNode);
+
+        val secondRectNode = doc.createElement("rect");
+        secondRectNode.setAttribute("width","80");
+        secondRectNode.setAttribute("height","240");
+        secondRectNode.setAttribute("fill","#009cdc");
+        secondRectNode.setAttribute("rx","2");
+        secondRectNode.setAttribute("ry","2");
+        tooltipChild.appendChild(secondRectNode);
+
+        val thirdTextNode = doc.createElement("text");
+        thirdTextNode.setAttribute("x","4");
+        thirdTextNode.setAttribute("y","6");
+        thirdTextNode.setAttribute("style","font:arial;fill='red';stroke='#0000FF'");
+        thirdTextNode.setAttribute("rx","2");
+        thirdTextNode.textContent = "Tooltip";        
+        tooltipChild.appendChild(thirdTextNode);                
+        
         doc.lastChild.appendChild((tooltipChild))
 
         val js =  "<![CDATA[   function getId(identifier)   {	   var tokens = identifier.split(\".\");	   return tokens[tokens.length - 1];   }   function addHighlight2(evt, id) {      var crmElem = document.getElementById(id);      crmElem.classList.add(\"boxH\");      var prefix = id.replace(\".BoxH\", \"\") + \"-to-\";      var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]');      //NEW CODE      var links = \"Outgoing Links:|\";	  var displayOutgoingInfoToolTip = false;	  var displayIncomingInfoToolTip = false;	        //END NEW CODE      for (i = 0; i < paths.length; ++i) {		 displayOutgoingInfoToolTip = true;         paths[i].classList.add(\"pathH\");         var tokens = paths[i].id.replace(prefix,\"\");          if (i == (paths.length - 1)) {            links += getId(tokens);         } else {            links += getId(tokens) + \"|\";         }      }	  	  var shortenedId = id.replace(\".BoxH\", \"\");	  var shortIdTokens = shortenedId.split(\".\");	  var shortId = shortIdTokens[shortIdTokens.length - 1];	  	  paths = document.querySelectorAll('[id$=\"' + shortId + '\"]');	  	  var hasIncomingLink = false;      for (i = 0; i < paths.length; ++i) {		 if (paths[i].tagName == \"path\")		 {			hasIncomingLink = true;			break;		 }      }	  	  if (hasIncomingLink)	  {	     if (displayOutgoingInfoToolTip)		 {			links += \"| |\" + \"Incoming Links:|\";		 }		 else		 {			links = \"Incoming Links:|\"		 }	  }	        for (i = 0; i < paths.length; ++i) {		 if (paths[i].tagName == \"path\")		 {			displayIncomingInfoToolTip = true;			var idx = paths[i].id.indexOf(\"-to\");			var tText =  paths[i].id.substring(0,idx);			links += getId(tText) + \"|\";		 }      }	  	        //NEW CODE      if (displayOutgoingInfoToolTip || displayIncomingInfoToolTip) {         var svg = document.getElementsByTagName('svg')[0]		         var tooltip = document.getElementById('tooltip');         var tooltipText = tooltip.getElementsByTagName('text')[0];         var tooltipRects = tooltip.getElementsByTagName('rect');         var CTM = svg.getScreenCTM();         var x = (evt.clientX - CTM.e + 6) / CTM.a;         var y = (evt.clientY - CTM.f + 20) / CTM.d;         tooltip.setAttributeNS(null, \"transform\", \"translate(\" + x + \" \" + y + \")\");         tooltip.setAttributeNS(null, \"visibility\", \"visible\");         tooltipText.firstChild.data = links;         var words = tooltipText.firstChild.data.split('|');         var allTspan = tooltipText.querySelectorAll(\"tspan\");         allTspan.forEach((child) => {            tooltipText.removeChild(child);         })         createMultiline(tooltipText, tooltipRects);      }      //END NEW CODE		   }         function removeHighlight2(id) {         //NEW CODE         var tooltip = document.getElementById('tooltip');         tooltip.setAttributeNS(null, \"visibility\", \"hidden\");         //END NEW CODE            var crmElem = document.getElementById(id);         crmElem.classList.remove(\"boxH\");            var prefix = id.replace(\".BoxH\", \"\") + \"-to-\";         var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]');            for (i = 0; i < paths.length; ++i)          {            paths[i].classList.remove(\"pathH\")         }      }]]>"
