@@ -115,7 +115,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         firstRectNode.setAttribute("opacity","0.4");
         firstRectNode.setAttribute("rx","2");
         firstRectNode.setAttribute("ry","2");
-        tooltipChild.appendChild(firstRecNode);
+        tooltipChild.appendChild(firstRectNode);
 
         val secondRectNode = doc.createElement("rect");
         secondRectNode.setAttribute("width","80");
