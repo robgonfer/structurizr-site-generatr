@@ -58,7 +58,8 @@ fun generateDiagramWithElementLinks(
     return diagramCache.getOrPut(name) {
         val reader = SourceStringReader(diagram.withCachedIncludes().definition)
         val stream = ByteArrayOutputStream()
-
+        
+        println("Name is " + name )
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
         AddHighlightToSvg(stream.toString(Charsets.UTF_8))
     }
