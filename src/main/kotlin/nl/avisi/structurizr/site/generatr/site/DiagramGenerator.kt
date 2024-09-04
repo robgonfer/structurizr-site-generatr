@@ -93,7 +93,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
             val rectId = node.attributes.getNamedItem("id").nodeValue.replace("elem_", "")  + ".BoxH"
 
             val attr1 = doc.createAttribute("onmouseover")
-            attr1.value = "addHighlight3(event,'${rectId}', name)";
+            attr1.value = "addHighlight3(event,'${rectId}', '${name}')";
 
             val attr2 = doc.createAttribute("onmouseout")
             attr2.value = "removeHighlight2('${rectId}')";
