@@ -58,10 +58,8 @@ fun generateDiagramWithElementLinks(
     return diagramCache.getOrPut(name) {
         val reader = SourceStringReader(diagram.withCachedIncludes().definition)
         val stream = ByteArrayOutputStream()
-        
-        println("Name is " + name )
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
-        AddHighlightToSvg(stream.toString(Charsets.UTF_8))
+        AddHighlightToSvg(name, stream.toString(Charsets.UTF_8))
     }
 }
 
@@ -71,7 +69,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
     return plantUMLExporter.export()
 }
 
- private fun AddHighlightToSvg(content: String)
+ private fun AddHighlightToSvg(name:String, content: String)
             : String {
 
         val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -79,6 +77,11 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         val doc = builder.parse(xml)
         val xPath = XPathFactory.newInstance().newXPath()
         val gNodes = xPath.compile("//*[local-name()='g' and starts-with(@id, 'elem_')]").evaluate(doc, XPathConstants.NODESET) as NodeList
+        val svgNode = xPath.compile("//*[local-name()='svg']").evaluate(doc, XPathConstants.NODESET) as NodeList
+        val svg = svgNode.item(0);
+        val idAttr = doc.createAttribute("id");
+        idAttr.value = "id-" + name;
+        svg.attributes.setNamedItem(idAttr);        
 
         val len = gNodes.length - 1
 
