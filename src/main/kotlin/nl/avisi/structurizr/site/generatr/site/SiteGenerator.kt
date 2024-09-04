@@ -14,6 +14,7 @@ import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 
 fun copySiteWideAssets(exportDir: File) {
+    copySiteWideAsset(exportDir, "/css/tooltip.css")    
     copySiteWideAsset(exportDir, "/css/style.css")
     copySiteWideAsset(exportDir, "/js/header.js")
     copySiteWideAsset(exportDir, "/js/svg-modal.js")
