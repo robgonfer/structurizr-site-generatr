@@ -133,13 +133,6 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         thirdTextNode.textContent = "Tooltip";        
         tooltipChild.appendChild(thirdTextNode);                
         doc.lastChild.appendChild((tooltipChild));
-        
-        val styleChild = doc.createElement("style");
-        val attrType = doc.createAttribute("type");
-        attrType.value = "text/css";
-        val css = "<![CDATA[			.boxH {				fill: red;			}			.pathH {				stroke: red !important;				stroke-width:3.0 !important;			}			path:hover { 			stroke: #FF0000 !important;			}			#tooltip {				dominant-baseline: hanging;				background-color:#33FF00;				font: bold 15px sans-serif;				fill: white;						}									]]>"
-        styleChild.appendChild(doc.createTextNode(css))
-        //doc.lastChild.appendChild((styleChild))
 
         val tf = TransformerFactory.newInstance()
         val transformer = tf.newTransformer()
