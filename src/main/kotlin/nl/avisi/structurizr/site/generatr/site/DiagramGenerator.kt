@@ -80,7 +80,8 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         val svgNode = xPath.compile("//*[local-name()='svg']").evaluate(doc, XPathConstants.NODESET) as NodeList
         val svg = svgNode.item(0);
         val idAttr = doc.createAttribute("id");
-        idAttr.value = "id-" + name;
+        val idSvg = "id-" + name;        
+        idAttr.value = idSvg;
         svg.attributes.setNamedItem(idAttr);        
 
         val len = gNodes.length - 1
@@ -93,7 +94,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
             val rectId = node.attributes.getNamedItem("id").nodeValue.replace("elem_", "")  + ".BoxH"
 
             val attr1 = doc.createAttribute("onmouseover")
-            attr1.value = "addHighlight3(event,'${rectId}', '${name}')";
+            attr1.value = "addHighlight3(event,'${rectId}', '${idSvg}')";
 
             val attr2 = doc.createAttribute("onmouseout")
             attr2.value = "removeHighlight2('${rectId}')";
