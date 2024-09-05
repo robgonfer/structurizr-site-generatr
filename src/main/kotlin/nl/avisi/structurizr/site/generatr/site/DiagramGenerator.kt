@@ -108,7 +108,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         }
 
         val tooltipChild = doc.createElement("g");
-        tooltipChild.setAttribute("id", "tooltip")
+        tooltipChild.setAttribute("id", "tooltip-" + idSvg)
         tooltipChild.setAttribute("visibility", "hidden")        
         
         val firstRectNode = doc.createElement("rect");
