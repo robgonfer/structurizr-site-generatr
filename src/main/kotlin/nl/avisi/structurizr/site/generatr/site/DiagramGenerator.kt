@@ -58,9 +58,8 @@ fun generateDiagramWithElementLinks(
     return diagramCache.getOrPut(name) {
         val reader = SourceStringReader(diagram.withCachedIncludes().definition)
         val stream = ByteArrayOutputStream()
-
         reader.outputImage(stream, FileFormatOption(FileFormat.SVG, false))
-        AddHighlightToSvg(stream.toString(Charsets.UTF_8))
+        AddHighlightToSvg(name, stream.toString(Charsets.UTF_8))
     }
 }
 
@@ -70,7 +69,7 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
     return plantUMLExporter.export()
 }
 
- private fun AddHighlightToSvg(content: String)
+ private fun AddHighlightToSvg(name:String, content: String)
             : String {
 
         val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
@@ -78,6 +77,12 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
         val doc = builder.parse(xml)
         val xPath = XPathFactory.newInstance().newXPath()
         val gNodes = xPath.compile("//*[local-name()='g' and starts-with(@id, 'elem_')]").evaluate(doc, XPathConstants.NODESET) as NodeList
+        val svgNode = xPath.compile("//*[local-name()='svg']").evaluate(doc, XPathConstants.NODESET) as NodeList
+        val svg = svgNode.item(0);
+        val idAttr = doc.createAttribute("id");
+        val idSvg = "id-" + name;        
+        idAttr.value = idSvg;
+        svg.attributes.setNamedItem(idAttr);        
 
         val len = gNodes.length - 1
 
@@ -89,10 +94,10 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
             val rectId = node.attributes.getNamedItem("id").nodeValue.replace("elem_", "")  + ".BoxH"
 
             val attr1 = doc.createAttribute("onmouseover")
-            attr1.value = "addHighlight('${rectId}')";
+            attr1.value = "addHighlight3(event,'${rectId}', '${idSvg}')";
 
             val attr2 = doc.createAttribute("onmouseout")
-            attr2.value = "removeHighlight('${rectId}')";
+            attr2.value = "removeHighlight3('${rectId}', '${idSvg}')";
 
             val attr3 = doc.createAttribute("id");
             attr3.value = rectId;
@@ -102,17 +107,37 @@ private fun generatePlantUMLDiagrams(workspace: Workspace): Collection<Diagram> 
             rect.attributes.setNamedItem(attr3)
         }
 
-        val js =  "<![CDATA[ 	function addHighlight(id) 	{ 		var crmElem = document.getElementById(id); 		crmElem.classList.add(\"boxH\"); 		 		var prefix = id.replace(\".BoxH\",\"\") + \"-to-\"; 		var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]'); 		 		for (i = 0; i < paths.length; ++i) {; 			paths[i].classList.add(\"pathH\") 		} 	} 	 	function removeHighlight(id) 	{ 		var crmElem = document.getElementById(id); 		crmElem.classList.remove(\"boxH\"); 		 		var prefix = id.replace(\".BoxH\",\"\") + \"-to-\"; 		var paths = document.querySelectorAll('[id^=\"' + prefix + '\"]'); 		 		for (i = 0; i < paths.length; ++i) {; 			paths[i].classList.remove(\"pathH\") 		} 		 	} ]]>"
-        val scriptChild = doc.createElement("script")
-        scriptChild.appendChild(doc.createTextNode(js))
-        doc.lastChild.appendChild(scriptChild)
+        val tooltipChild = doc.createElement("g");
+        tooltipChild.setAttribute("id", "tooltip-" + idSvg)
+        tooltipChild.setAttribute("visibility", "hidden")        
+        
+        val firstRectNode = doc.createElement("rect");
+        firstRectNode.setAttribute("x","2");
+        firstRectNode.setAttribute("y","2");
+        firstRectNode.setAttribute("width","80");
+        firstRectNode.setAttribute("height","24");
+        firstRectNode.setAttribute("fill","black");
+        firstRectNode.setAttribute("opacity","0.4");
+        firstRectNode.setAttribute("rx","2");
+        firstRectNode.setAttribute("ry","2");
+        tooltipChild.appendChild(firstRectNode);
 
-        val styleChild = doc.createElement("style");
-        val attrType = doc.createAttribute("type");
-        attrType.value = "text/css";
-        val css = "<![CDATA[ .boxH { fill: red; } .pathH { stroke: red !important; stroke-width:3.0 !important; } ]]>"
-        styleChild.appendChild(doc.createTextNode(css))
-        doc.lastChild.appendChild((styleChild))
+        val secondRectNode = doc.createElement("rect");
+        secondRectNode.setAttribute("width","80");
+        secondRectNode.setAttribute("height","240");
+        secondRectNode.setAttribute("fill","#009cdc");
+        secondRectNode.setAttribute("rx","2");
+        secondRectNode.setAttribute("ry","2");
+        tooltipChild.appendChild(secondRectNode);
+
+        val thirdTextNode = doc.createElement("text");
+        thirdTextNode.setAttribute("x","4");
+        thirdTextNode.setAttribute("y","6");
+        thirdTextNode.setAttribute("style","font:arial;fill='red';stroke='#0000FF'");
+        thirdTextNode.setAttribute("rx","2");
+        thirdTextNode.textContent = "Tooltip";        
+        tooltipChild.appendChild(thirdTextNode);                
+        doc.lastChild.appendChild((tooltipChild));
 
         val tf = TransformerFactory.newInstance()
         val transformer = tf.newTransformer()
