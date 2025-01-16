@@ -62,6 +62,11 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
         val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
 
+        val digTTaaa = diagrams.filter { v -> v.container.id == it.container.id }
+        digTTaaa.forEach {k ->
+            println("Component ${it.name} found in component view ${k.name}")
+        }        
+
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)
         documents += Document(
