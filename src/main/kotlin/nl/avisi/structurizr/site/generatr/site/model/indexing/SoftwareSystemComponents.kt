@@ -54,6 +54,18 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
             .filter { it.softwareSystem == softwareSystem}
             .sortedBy { it.key }
 
+    diagrams.forEach { capa ->
+        println("KKKKK ${capa.name}")
+        if (capa.key == "fmvnoManageNetworkSpeed")
+        {
+            println("Dumping all elements")
+            capa.elements.forEach { sapeto ->
+                println("Sapeto ${sapeto.element.name}")
+            }
+
+        }
+    }            
+
     val allDigs = generatorContext.workspace.views.componentViews
             .sortedBy { it.key }
 
