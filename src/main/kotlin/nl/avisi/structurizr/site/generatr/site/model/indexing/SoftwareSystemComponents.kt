@@ -63,17 +63,13 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }        
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)
-        documents += Document(
-                GetUrl(dig?.key ?: "NOTFOUND", href),
-                "Component views",
-                "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
-                it.name)
+
 
         //Add linked components and External SS
         if (dig != null)
         {
             //Find other views with it
-            diagrams.forEach { view ->
+            allDigs.forEach { view ->
                 view.elements.forEach { el ->
                     if (el.element.name == it.name)
                     {
@@ -103,11 +99,6 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 if (relDig?.key?.isNotEmpty() == true)
                 {
 
-                    documents += Document(
-                            GetUrl(relDig.key, href),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
-                            it.name)
                 }
 
             };
