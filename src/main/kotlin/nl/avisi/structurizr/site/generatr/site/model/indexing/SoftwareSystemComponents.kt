@@ -90,6 +90,19 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         //Add linked components and External SS
         if (dig != null)
         {
+            //Find other views with it
+            diagrams.forEach { views ->
+                views.elements.forEach { view ->
+                    if (view.element.name == it.name)
+                    {
+                        documents += Document(
+                                GetUrl(view.element.name, href),
+                                "Component views",
+                                "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
+                                it.name)
+                    }
+                }
+            }                
             //Need to find all components with a relationship with IT as destination
             val componentsWithRel = mutableListOf<Component>()
 
