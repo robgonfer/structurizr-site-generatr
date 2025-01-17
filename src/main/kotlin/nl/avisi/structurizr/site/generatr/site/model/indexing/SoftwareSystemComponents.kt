@@ -52,19 +52,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
     val diagrams = generatorContext.workspace.views.componentViews
             .filter { it.softwareSystem == softwareSystem}
-            .sortedBy { it.key }
-
-    diagrams.forEach { capa ->
-        println("KKKKK ${capa.name}")
-        if (capa.key == "fmvnoManageNetworkSpeed")
-        {
-            println("Dumping all elements")
-            capa.elements.forEach { sapeto ->
-                println("Sapeto ${sapeto.element.name}")
-            }
-
-        }
-    }            
+            .sortedBy { it.key }            
 
     val allDigs = generatorContext.workspace.views.componentViews
             .sortedBy { it.key }
@@ -72,13 +60,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
     components.forEach {
 
-        val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
-        val digTTaaa = diagrams.filter { v -> v.container.id == it.container.id }
-        digTTaaa.forEach {k ->
-            println("Component ${it.name} found in component view ${k.name}")
-        }        
-
+        val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }        
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)
         documents += Document(
@@ -96,7 +78,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                     if (el.element.name == it.name)
                     {
                         documents += Document(
-                                GetUrl(view.name, href),
+                                GetUrl(view.key, href),
                                 "Component views",
                                 "${softwareSystem.name} | Component views | ${view.container.name} | ${it.name}",
                                 it.name)
