@@ -75,14 +75,14 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                             documents += Document(
                                     GetUrl(view.key, href),
                                     "Component views",
-                                    "${softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
+                                    "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
                                     it.name)
                         }
                         else {
                             documents += Document(
                                     GetUrl(view.key, href),
                                     "Component views",
-                                    "${softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
+                                    "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
                                     it.name)
                         }
                     }
