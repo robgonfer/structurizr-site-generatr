@@ -91,14 +91,14 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         if (dig != null)
         {
             //Find other views with it
-            diagrams.forEach { views ->
-                views.elements.forEach { view ->
-                    if (view.element.name == it.name)
+            diagrams.forEach { view ->
+                view.elements.forEach { el ->
+                    if (el.element.name == it.name)
                     {
                         documents += Document(
-                                GetUrl(view.element.name, href),
+                                GetUrl(view.name, href),
                                 "Component views",
-                                "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
+                                "${softwareSystem.name} | Component views | ${view.container.name} | ${it.name}",
                                 it.name)
                     }
                 }
