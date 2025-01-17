@@ -64,44 +64,30 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)
 
-
-        //Add linked components and External SS
         if (dig != null)
         {
-            //Find other views with it
+            //Find all views with this component
             allDigs.forEach { view ->
                 view.elements.forEach { el ->
                     if (el.element.name == it.name)
                     {
-                        documents += Document(
-                                GetUrl(view.key, href),
-                                "Component views",
-                                "${softwareSystem.name} | Component views | ${view.container.name} | ${it.name}",
-                                it.name)
+                        if (view.containerId == it.container.id) {
+                            documents += Document(
+                                    GetUrl(view.key, href),
+                                    "Component views",
+                                    "${softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
+                                    it.name)
+                        }
+                        else {
+                            documents += Document(
+                                    GetUrl(view.key, href),
+                                    "Component views",
+                                    "${softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
+                                    it.name)
+                        }
                     }
                 }
             }                
-            //Need to find all components with a relationship with IT as destination
-            val componentsWithRel = mutableListOf<Component>()
-
-            allComponents.forEach { c ->
-                c.relationships
-                        .filter { r -> r.destination.id.equals(it.id) }
-                        .forEach {rl ->
-                            componentsWithRel.add(c)
-                        }
-            }
-
-            componentsWithRel.forEach { linkedct ->
-
-                val relDig = allDigs.firstOrNull { v -> v.container.id == linkedct.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-                }
-
-            };
 
             //Now all external software systems. Get Inbound
             val externalSSWithRel = mutableListOf<SoftwareSystem>()
