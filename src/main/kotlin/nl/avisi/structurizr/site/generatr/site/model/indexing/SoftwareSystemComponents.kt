@@ -61,9 +61,9 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         println("Processing External SS ${s.name}")
         allDigs.forEach { view ->
             view.elements.forEach { el ->
-                println("Processing External SS view el ${el.element.name}")
                 if (el.element.name == s.name)
                 {
+                    println("Processing External SS view el ${el.element.name}")
                     documents += Document(
                             GetUrl(view.key),
                             "Component views",
