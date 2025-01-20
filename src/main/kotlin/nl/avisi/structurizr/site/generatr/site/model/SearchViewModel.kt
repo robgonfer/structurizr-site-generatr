@@ -1,17 +1,7 @@
 package nl.avisi.structurizr.site.generatr.site.model
 
 import nl.avisi.structurizr.site.generatr.site.GeneratorContext
-import nl.avisi.structurizr.site.generatr.site.model.indexing.home
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemComponents
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemComponentsComponent
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemContainers
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemContext
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemDecisions
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemHome
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemRelationships
-import nl.avisi.structurizr.site.generatr.site.model.indexing.softwareSystemSections
-import nl.avisi.structurizr.site.generatr.site.model.indexing.workspaceDecisions
-import nl.avisi.structurizr.site.generatr.site.model.indexing.workspaceSections
+import nl.avisi.structurizr.site.generatr.site.model.indexing.*
 
 class SearchViewModel(generatorContext: GeneratorContext) : PageViewModel(generatorContext) {
     override val pageSubTitle = "Search results"
