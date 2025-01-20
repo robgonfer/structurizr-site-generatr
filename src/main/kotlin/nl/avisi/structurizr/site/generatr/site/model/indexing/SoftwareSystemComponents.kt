@@ -58,8 +58,10 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
 
     allExternalSoftwareSystems.forEach { s ->
+        println("Processing External SS ${s.name}")
         allDigs.forEach { view ->
             view.elements.forEach { el ->
+                println("Processing External SS view el ${el.element.name}")
                 if (el.element.name == s.name)
                 {
                     documents += Document(
@@ -122,17 +124,17 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 if (relDig?.key?.isNotEmpty() == true)
                 {
 
-                    documents += Document(
-                            GetUrl(relDig.key),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-                            linkedExternalSS.name)
-
-                    documents += Document(
-                            GetUrl(relDig.key),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-                            it.name)
+//                    documents += Document(
+//                            GetUrl(relDig.key),
+//                            "Component views",
+//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
+//                            linkedExternalSS.name)
+//
+//                    documents += Document(
+//                            GetUrl(relDig.key),
+//                            "Component views",
+//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
+//                            it.name)
                 }
 
             };
@@ -155,11 +157,11 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 if (relDig?.key?.isNotEmpty() == true)
                 {
 
-                    documents += Document(
-                            GetUrl(relDig.key),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} |  ${linkedExternalSS.name} | (OUTBOUND)",
-                            linkedExternalSS.name)
+//                    documents += Document(
+//                            GetUrl(relDig.key),
+//                            "Component views",
+//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} |  ${linkedExternalSS.name} | (OUTBOUND)",
+//                            linkedExternalSS.name)
                 }
 
             };
