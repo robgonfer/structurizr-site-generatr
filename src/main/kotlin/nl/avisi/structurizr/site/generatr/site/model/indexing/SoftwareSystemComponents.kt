@@ -32,7 +32,9 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
     val allSoftwareSystems = softwareSystem.model.softwareSystems
-    val allExternalSoftwareSystems = allSoftwareSystems.filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
+    val allExternalSoftwareSystems = allSoftwareSystems
+            .filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
+            .flatMap { ss -> listOf(ss.name) }
             .distinct()
 
     val allComponents = mutableListOf<Component>()
@@ -59,10 +61,10 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
 
     allExternalSoftwareSystems.forEach { s ->
-        println("Processing External SS ${s.name}")
+        println("Processing External SS ${s}")
         allDigs.forEach { view ->
             view.elements.forEach { el ->
-                if (el.element.name == s.name)
+                if (el.element.name == s)
                 {
                     println("Processing External SS view el ${el.element.name}")
                     documents += Document(
