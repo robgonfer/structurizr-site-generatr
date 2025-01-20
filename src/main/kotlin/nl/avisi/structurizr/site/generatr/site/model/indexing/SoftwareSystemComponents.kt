@@ -35,7 +35,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
     val allExternalSoftwareSystems = allSoftwareSystems
             .filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
             .flatMap { ss -> listOf(ss.name) }
-            .distinct()
+            .toSet()
 
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
