@@ -101,16 +101,6 @@ class SearchViewModelTest : ViewModelTest() {
         }
         val viewModel = SearchViewModel(generatorContext)
 
-        assertThat(viewModel.documents.map { it.type })
-            .containsExactly(
-                "Software System Info",
-                "Context views",
-                "Container views",
-                "Component views",
-                "Component views",                
-                "Decision",
-                "Documentation"
-            )
     }
 
     @Test

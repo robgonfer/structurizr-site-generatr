@@ -2,7 +2,6 @@ package nl.avisi.structurizr.site.generatr.site.model.indexing
 
 import com.structurizr.model.Component
 import com.structurizr.model.SoftwareSystem
-import nl.avisi.structurizr.site.generatr.includedSoftwareSystems
 import nl.avisi.structurizr.site.generatr.site.GeneratorContext
 import nl.avisi.structurizr.site.generatr.site.asUrlToDirectory
 import nl.avisi.structurizr.site.generatr.site.model.PageViewModel
@@ -30,11 +29,52 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
             )
         }
 
+fun externalSystems(generatorContext: GeneratorContext) : List<Document> {
+
+    val allSoftwareSystems = generatorContext.workspace.model.softwareSystems
+    val allExternalSoftwareSystems = allSoftwareSystems
+            .filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
+            .flatMap { ss -> listOf(ss.name) }
+            .toSet()
+
+    val allComponents = mutableListOf<Component>()
+    allSoftwareSystems.forEach {ss ->
+
+        allComponents.addAll(ss.containers
+                .flatMap { container -> container.components }
+                .toList())
+
+    }
+
+    val documents = emptyList<Document>().toMutableList()
+
+    val allDigs = generatorContext.workspace.views.componentViews
+            .sortedBy { it.key }
+
+
+    allExternalSoftwareSystems.forEach { s ->
+        allDigs.forEach { view ->
+            view.elements.forEach { el ->
+                if (el.element.name == s)
+                {
+                    documents += Document(
+                            GetUrl(view.key),
+                            "Component views",
+                            "${view.softwareSystem.name} | Component views (External Software Systems) | ${view.container.name} | ${el.element.name}",
+                            el.element.name)
+                }
+            }
+        }
+    }
+
+
+    return documents
+}
+
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
-    val allSoftwareSystems = softwareSystem.model.softwareSystems        
-    val allExternalSoftwareSystems = allSoftwareSystems.filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
-    
+    val allSoftwareSystems = softwareSystem.model.softwareSystems
+
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
 
@@ -61,111 +101,41 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
     components.forEach {
 
         val dig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
         val href = SoftwareSystemPageViewModel.url(softwareSystem, SoftwareSystemPageViewModel.Tab.COMPONENT)
                 .asUrlToDirectory(viewModel.url)
-        documents += Document(
-                GetUrl(dig?.key ?: "NOTFOUND", href),
-                "Component views",
-                "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name}",
-                it.name)
 
-        //Add linked components and External SS
         if (dig != null)
         {
-            //Need to find all components with a relationship with IT as destination
-            val componentsWithRel = mutableListOf<Component>()
-
-            allComponents.forEach { c ->
-                c.relationships
-                        .filter { r -> r.destination.id.equals(it.id) }
-                        .forEach {rl ->
-                            componentsWithRel.add(c)
+            //Find all views with this component
+            allDigs.forEach { view ->
+                view.elements.forEach { el ->
+                    if (el.element.name == it.name)
+                    {
+                        if (view.containerId == it.container.id) {
+                            documents += Document(
+                                    GetUrl(view.key),
+                                    "Component views",
+                                    "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
+                                    it.name)
                         }
+                        else {
+                            documents += Document(
+                                    GetUrl(view.key),
+                                    "Component views",
+                                    "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
+                                    it.name)
+                        }
+                    }
+                }
             }
 
-            componentsWithRel.forEach { linkedct ->
-
-                val relDig = allDigs.firstOrNull { v -> v.container.id == linkedct.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-                    documents += Document(
-                            GetUrl(relDig.key, href),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${linkedct.container.name} | ${linkedct.name} | (INBOUND)",
-                            it.name)
-                }
-
-            };
-
-            //Now all external software systems. Get Inbound
-            val externalSSWithRel = mutableListOf<SoftwareSystem>()
-
-            allExternalSoftwareSystems.forEach { s ->
-                s.relationships
-                        .filter { r -> r.destination.id.equals(it.id) }
-                        .forEach {rl ->
-                            externalSSWithRel.add(s)
-                        }
-            }
-
-            externalSSWithRel.forEach { linkedExternalSS ->
-
-                val relDig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-                    documents += Document(
-                            GetUrl(relDig.key, href),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-                            linkedExternalSS.name)
-
-                    documents += Document(
-                            GetUrl(relDig.key, href),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-                            it.name)                    
-                }
-
-            };
-                
-            //Now outbound calls to external systems
-            val externalSSWithOutRel = mutableListOf<SoftwareSystem>()
-
-            allExternalSoftwareSystems.forEach { s ->
-                it.relationships
-                        .filter { r -> r.destination.id.equals(s.id) }
-                        .forEach { se ->
-                            externalSSWithOutRel.add(s)
-                        }
-            }
-
-            externalSSWithOutRel.forEach { linkedExternalSS ->
-
-                val relDig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-                    documents += Document(
-                            GetUrl(relDig.key, href),
-                            "Component views",
-                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} |  ${linkedExternalSS.name} | (OUTBOUND)",
-                            linkedExternalSS.name)
-                }
-
-            };                
         }
     }
 
     return documents
 }
 
-private fun GetUrl(componentId : String, defaultUrl : String) : String
+private fun GetUrl(componentId: String) : String
 {
     return "https://c4.lebara.com/master/svg/$componentId.svg"
 }
