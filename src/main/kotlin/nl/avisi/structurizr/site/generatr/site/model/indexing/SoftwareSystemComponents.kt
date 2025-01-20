@@ -33,6 +33,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
     val allSoftwareSystems = softwareSystem.model.softwareSystems
     val allExternalSoftwareSystems = allSoftwareSystems.filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
+            .distinct()
 
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
