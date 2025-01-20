@@ -29,6 +29,50 @@ fun softwareSystemComponents(softwareSystem: SoftwareSystem, viewModel: PageView
             )
         }
 
+fun externalSystems(generatorContext: GeneratorContext) : List<Document> {
+
+    val allSoftwareSystems = generatorContext.workspace.model.softwareSystems
+    val allExternalSoftwareSystems = allSoftwareSystems
+            .filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
+            .flatMap { ss -> listOf(ss.name) }
+            .toSet()
+
+    val allComponents = mutableListOf<Component>()
+    allSoftwareSystems.forEach {ss ->
+
+        allComponents.addAll(ss.containers
+                .flatMap { container -> container.components }
+                .toList())
+
+    }
+
+    val documents = emptyList<Document>().toMutableList()
+
+    val allDigs = generatorContext.workspace.views.componentViews
+            .sortedBy { it.key }
+
+
+    allExternalSoftwareSystems.forEach { s ->
+        println("Processing External SS ${s}")
+        allDigs.forEach { view ->
+            view.elements.forEach { el ->
+                if (el.element.name == s)
+                {
+                    println("Processing External SS view el ${el.element.name}")
+                    documents += Document(
+                            GetUrl(view.key),
+                            "Component views",
+                            "${view.softwareSystem.name} | Component views (External Software Systems) | ${view.container.name} | ${el.element.name}",
+                            el.element.name)
+                }
+            }
+        }
+    }
+
+
+    return documents
+}
+
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
     val allSoftwareSystems = softwareSystem.model.softwareSystems
@@ -66,12 +110,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
             view.elements.forEach { el ->
                 if (el.element.name == s)
                 {
-                    println("Processing External SS view el ${el.element.name}")
-                    documents += Document(
-                            GetUrl(view.key),
-                            "Component views",
-                            "${view.softwareSystem.name} | Component views (External Software Systems) | ${view.container.name} | ${el.element.name}",
-                            el.element.name)
+
                 }
             }
         }
