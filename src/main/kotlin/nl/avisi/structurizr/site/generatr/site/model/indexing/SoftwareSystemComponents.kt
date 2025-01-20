@@ -109,65 +109,6 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 }
             }
 
-            //Now all external software systems. Get Inbound
-            val externalSSWithRel = mutableListOf<SoftwareSystem>()
-
-            allExternalSoftwareSystems.forEach { s ->
-                s.relationships
-                        .filter { r -> r.destination.id.equals(it.id) }
-                        .forEach {rl ->
-                            externalSSWithRel.add(s)
-                        }
-            }
-
-            externalSSWithRel.forEach { linkedExternalSS ->
-
-                val relDig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-//                    documents += Document(
-//                            GetUrl(relDig.key),
-//                            "Component views",
-//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-//                            linkedExternalSS.name)
-//
-//                    documents += Document(
-//                            GetUrl(relDig.key),
-//                            "Component views",
-//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} | ${linkedExternalSS.name} | (INBOUND)",
-//                            it.name)
-                }
-
-            };
-
-            //Now outbound calls to external systems
-            val externalSSWithOutRel = mutableListOf<SoftwareSystem>()
-
-            allExternalSoftwareSystems.forEach { s ->
-                it.relationships
-                        .filter { r -> r.destination.id.equals(s.id) }
-                        .forEach { se ->
-                            externalSSWithOutRel.add(s)
-                        }
-            }
-
-            externalSSWithOutRel.forEach { linkedExternalSS ->
-
-                val relDig = diagrams.firstOrNull { v -> v.container.id == it.container.id }
-
-                if (relDig?.key?.isNotEmpty() == true)
-                {
-
-//                    documents += Document(
-//                            GetUrl(relDig.key),
-//                            "Component views",
-//                            "${softwareSystem.name} | Component views | ${it.container.name} | ${it.name} |  ${linkedExternalSS.name} | (OUTBOUND)",
-//                            linkedExternalSS.name)
-                }
-
-            };
         }
     }
 
