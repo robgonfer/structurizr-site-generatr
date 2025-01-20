@@ -53,12 +53,10 @@ fun externalSystems(generatorContext: GeneratorContext) : List<Document> {
 
 
     allExternalSoftwareSystems.forEach { s ->
-        println("Processing External SS ${s}")
         allDigs.forEach { view ->
             view.elements.forEach { el ->
                 if (el.element.name == s)
                 {
-                    println("Processing External SS view el ${el.element.name}")
                     documents += Document(
                             GetUrl(view.key),
                             "Component views",
@@ -76,10 +74,6 @@ fun externalSystems(generatorContext: GeneratorContext) : List<Document> {
 fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel: PageViewModel, generatorContext: GeneratorContext) : List<Document> {
 
     val allSoftwareSystems = softwareSystem.model.softwareSystems
-    val allExternalSoftwareSystems = allSoftwareSystems
-            .filter { x -> x.hasTag("FakeExternalSystem") ||  x.hasTag("External System")}
-            .flatMap { ss -> listOf(ss.name) }
-            .toSet()
 
     val allComponents = mutableListOf<Component>()
     allSoftwareSystems.forEach {ss ->
@@ -102,19 +96,6 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
 
     val allDigs = generatorContext.workspace.views.componentViews
             .sortedBy { it.key }
-
-
-    allExternalSoftwareSystems.forEach { s ->
-        println("Processing External SS ${s}")
-        allDigs.forEach { view ->
-            view.elements.forEach { el ->
-                if (el.element.name == s)
-                {
-
-                }
-            }
-        }
-    }
 
 
     components.forEach {
