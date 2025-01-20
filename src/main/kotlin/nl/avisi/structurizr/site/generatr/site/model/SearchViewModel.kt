@@ -24,6 +24,7 @@ class SearchViewModel(generatorContext: GeneratorContext) : PageViewModel(genera
         add(home(generatorContext.workspace.documentation, this@SearchViewModel))
         addAll(workspaceDecisions(generatorContext.workspace.documentation, this@SearchViewModel))
         addAll(workspaceSections(generatorContext.workspace.documentation, this@SearchViewModel))
+        addAll(externalSystems(generatorContext))        
         addAll(
             includedSoftwareSystems
                 .flatMap {
