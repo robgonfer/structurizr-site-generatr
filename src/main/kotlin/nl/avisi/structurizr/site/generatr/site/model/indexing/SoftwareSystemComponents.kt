@@ -88,7 +88,8 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
             .sortedBy { it.name }
             .flatMap { container -> container.components }
 
-    var documents = emptyList<Document>().toMutableList()
+    var documentsMain = emptyList<Document>().toMutableList()
+    var documentsRef = emptyList<Document>().toMutableList()
 
     val diagrams = generatorContext.workspace.views.componentViews
             .filter { it.softwareSystem == softwareSystem}
@@ -112,14 +113,14 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                     if (el.element.name == it.name)
                     {
                         if (view.containerId == it.container.id) {
-                            documents += Document(
+                            documentsMain += Document(
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
                                     it.name)
                         }
                         else {
-                            documents += Document(
+                            documentsRef += Document(
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
@@ -132,7 +133,8 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
         }
     }
 
-    return documents
+    documentsMain.addAll(documentsRef)
+    return  documentsMain
 }
 
 private fun GetUrl(componentId: String) : String
