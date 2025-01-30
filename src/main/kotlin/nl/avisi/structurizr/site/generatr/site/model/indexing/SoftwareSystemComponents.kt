@@ -111,12 +111,17 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 view.elements.forEach { el ->
                     if (el.element.name == it.name)
                     {
+                        var tags = ""
+
+                        if (it.tags == "Element,Component") tags = "Container"
+                        else tags =  it.tags.replace("Element,Component,", "")
+                        
                         if (view.containerId == it.container.id) {
                             documents += Document(
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
-                                    it.name)
+                                    tags)
                             
                             documents += Document(
                                     GetUrl(view.key),
@@ -136,7 +141,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
-                                    it.tags.replace("Element,Component,", ""))                            
+                                    tags)                            
                         }
                     }
                 }
