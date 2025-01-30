@@ -117,6 +117,12 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
                                     it.name)
+                            
+                            documents += Document(
+                                    GetUrl(view.key),
+                                    "Component views",
+                                    "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
+                                    it.tags)                            
                         }
                         else {
                             documents += Document(
@@ -124,6 +130,13 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     "Component views",
                                     "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
                                     it.name)
+
+
+                            documents += Document(
+                                    GetUrl(view.key),
+                                    "Component views",
+                                    "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
+                                    it.tags)                            
                         }
                     }
                 }
