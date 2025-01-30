@@ -121,13 +121,13 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
-                                    tags)
+                                    it.name)
                             
                             documents += Document(
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
-                                    it.tags.replace("Element,Component,", ""))                            
+                                    tags)                            
                         }
                         else {
                             documents += Document(
