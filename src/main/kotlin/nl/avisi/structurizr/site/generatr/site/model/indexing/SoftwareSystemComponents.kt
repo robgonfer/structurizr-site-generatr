@@ -122,7 +122,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
-                                    it.tags)                            
+                                    it.tags.replace("Element,Component,", ""))                            
                         }
                         else {
                             documents += Document(
@@ -136,7 +136,7 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
-                                    it.tags)                            
+                                    it.tags.replace("Element,Component,", ""))                            
                         }
                     }
                 }
