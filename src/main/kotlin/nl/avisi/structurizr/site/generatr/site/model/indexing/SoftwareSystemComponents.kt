@@ -111,12 +111,28 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                 view.elements.forEach { el ->
                     if (el.element.name == it.name)
                     {
+                        var insertTag = false
+                        var tags = ""
+
+                        if (it.tags == "Element,Component")
+                        else {
+                            insertTag = true
+                            tags = it.tags.replace("Element,Component,", "")
+                        }
+
                         if (view.containerId == it.container.id) {
                             documents += Document(
                                     GetUrl(view.key),
                                     "Component views",
                                     "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
                                     it.name)
+                            if (insertTag) {
+                                documents += Document(
+                                        GetUrl(view.key),
+                                        "Component views",
+                                        "${view.softwareSystem.name} | Component Views (Main) | ${view.container.name} | ${it.name}",
+                                        tags)
+                            }
                         }
                         else {
                             documents += Document(
@@ -124,6 +140,14 @@ fun softwareSystemComponentsComponent(softwareSystem: SoftwareSystem, viewModel:
                                     "Component views",
                                     "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
                                     it.name)
+
+                            if (insertTag) {
+                                documents += Document(
+                                        GetUrl(view.key),
+                                        "Component views",
+                                        "${view.softwareSystem.name} | Component views (Referenced) | ${view.container.name} | ${it.name}",
+                                        tags)
+                            }
                         }
                     }
                 }
